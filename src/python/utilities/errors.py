@@ -20,10 +20,8 @@ def error(err: Any, message: str):
     Game.notify(full_message)
 
 
-__pragma__('skip')
 _I = TypeVar('_I')
 _O = TypeVar('_O')
-__pragma__('noskip')
 
 
 def execute_catching(the_function: Callable[_I, _O], error_description: Callable[_I, str], *args: _I) \
