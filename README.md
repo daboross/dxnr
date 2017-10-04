@@ -10,10 +10,10 @@ This repository uses [Transcrypt] to compile python to JavaScript.
 
 You may be interested in:
 
-- [Building dnxr locally]
+- [building dnxr locally]
 - [Transcrypt Peculiarities: Transcrypt vs. Python]
 
-[Building dnxr]: ./docs/building.md
+[building dnxr locally]: ./docs/building.md
 [Transcrypt Peculiarities: Transcrypt vs. Python]: ./docs/transcrypt-peculiarities.md
 [Transcrypt]: https://github.com/QQuick/Transcrypt
 [screeps]: https://screeps.com/
