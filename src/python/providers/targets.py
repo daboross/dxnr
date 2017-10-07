@@ -13,11 +13,11 @@ _creep_to_targets = None  # type: Dict[str, Dict[int, str]]
 _target_to_creeps = None  # type: Dict[int, Dict[str, List[str]]]
 
 
-def instantiate():
+def instantiate() -> None:
     global _mem, _creep_to_targets, _target_to_creeps
     _mem = Memory[key_memory_targets]
     if not _mem:
-        _mem = Memory[key_memory_targets] = {}
+        _mem = Memory[key_memory_targets] = cast(_Memory, {})
     _creep_to_targets = _mem[_key_targets_creep_to_targets]
     if not _creep_to_targets:
         _creep_to_targets = _mem[_key_targets_creep_to_targets] = {}
@@ -79,6 +79,7 @@ def _find_target(creep: Creep, target_type: int) -> Optional[str]:
         return find_functions[target_type](creep)
     else:
         warnings.missing_registration("target", target_type)
+        return None
 
 
 def get_number_of_targeters(target_type: int, target_id: str) -> int:

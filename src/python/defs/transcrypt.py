@@ -14,10 +14,11 @@ def js_isNaN(num: Union[float, int, str]) -> bool:
 
 js_global = None  # type: Any
 
+__except0__ = None  # type: Exception
+
 __all__ = [
     '__new__',
     'js_isNaN',
     'js_global',
+    '__except0__',
 ]
-
-__except0__ = None  # type: Exception

@@ -372,15 +372,6 @@ __all__ = [
     "js_isNaN",
     'js_global',
     "__except0__",
-
-    # metadata
-    "StoredObstacleType",
-    "StoredHostileStructureType",
-    "StoredEnemyRoomState",
-    "StoredObstacle",
-    "StoredHostileStructure",
-    "StoredEnemyRoomOwner",
-    "StoredRoom",
 ]
 
 __pragma__('noskip')

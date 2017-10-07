@@ -43,6 +43,7 @@ Thumbs.db
 ###############
 MANIFEST.MF
 dependency-reduced-pom.xml
+.mypy_cache
 
 # Distribution / packaging #
 ############################

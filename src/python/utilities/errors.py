@@ -3,7 +3,7 @@ from typing import Any, Callable, Optional, TypeVar
 from defs import *
 
 
-def error(err: Any, message: str):
+def error(err: Any, message: str) -> None:
     if err == undefined:
         if err is None:
             error_description = "null error"
@@ -20,11 +20,10 @@ def error(err: Any, message: str):
     Game.notify(full_message)
 
 
-_I = TypeVar('_I')
 _O = TypeVar('_O')
 
 
-def execute_catching(the_function: Callable[_I, _O], error_description: Callable[_I, str], *args: _I) \
+def execute_catching(the_function: Callable[..., _O], error_description: Callable[..., str], *args: Any) \
         -> Optional[_O]:
     result = None
     # noinspection PyBroadException
@@ -36,10 +35,10 @@ def execute_catching(the_function: Callable[_I, _O], error_description: Callable
     return result
 
 
-def catching(error_description: Callable[_I, str], default_value=None) \
-        -> Callable[[Callable[_I, _O]], Callable[_I, _O]]:
-    def wrap(thing):
-        def new_definition(*args):
+def catching(error_description: Callable[..., str], default_value: _O = None) \
+        -> Callable[[Callable[..., _O]], Callable[..., _O]]:
+    def wrap(thing: Callable[..., _O]) -> Callable[..., _O]:
+        def new_definition(*args: Any) -> _O:
             result = default_value
             # noinspection PyBroadException
             try:

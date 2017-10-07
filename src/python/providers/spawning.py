@@ -6,7 +6,7 @@ from utilities import errors
 
 
 @errors.catching(lambda spawn: "running spawn {}".format(spawn))
-def run_spawn(spawn: StructureSpawn):
+def run_spawn(spawn: StructureSpawn) -> None:
     if spawn.spawning:
         return
 

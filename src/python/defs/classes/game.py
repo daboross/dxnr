@@ -237,7 +237,7 @@ class Game:
         pass
 
     @classmethod
-    def notify(cls, message: str, groupInterval: int = 0):
+    def notify(cls, message: str, groupInterval: int = 0) -> None:
         pass
 
 
@@ -263,7 +263,7 @@ class PathFinder:
         pass
 
     class CostMatrix:
-        def __init__(self):
+        def __init__(self) -> None:
             pass
 
         def set(self, x: int, y: int, cost: int) -> None:

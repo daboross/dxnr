@@ -5,7 +5,7 @@ from utilities import warnings
 
 
 class Exports:
-    def __init__(self):
+    def __init__(self) -> None:
         self._target_type_to_find_function = {}  # type: Dict[int, Callable[[Creep], Optional[str]]]
         self._role_type_to_run_function = {}  # type: Dict[int, Callable[[Room, Creep], None]]
 

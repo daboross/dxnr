@@ -234,7 +234,7 @@ class StructureLink(OwnedStructure):
         self.energy = energy
         self.energyCapacity = energyCapacity
 
-    def transferEnergy(self, target: 'StructureLink', amount: int = 0):
+    def transferEnergy(self, target: 'StructureLink', amount: int = 0) -> int:
         pass
 
 

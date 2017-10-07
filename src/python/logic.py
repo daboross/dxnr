@@ -8,7 +8,7 @@ behaviors.register()
 
 
 @errors.catching(lambda: "running main")
-def main():
+def main() -> None:
     """
     Main game logic loop.
     """

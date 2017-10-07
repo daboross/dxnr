@@ -1,7 +1,7 @@
 from defs import *
 
 
-def main():
+def main() -> None:
     """
     Main game logic loop shim.
     """

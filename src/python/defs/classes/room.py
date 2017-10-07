@@ -4,6 +4,9 @@ from .memory import _Memory
 from .misc_obj import RoomObject
 from .structures import StructureController, StructureStorage, StructureTerminal
 
+_HasPosition = Union['RoomPosition', 'RoomObject']
+_FindParameter = Union[int, List[_HasPosition]]
+
 
 # noinspection PyPep8Naming
 class RoomPosition:
@@ -61,9 +64,6 @@ class RoomPosition:
 
 
 RoomPosition.prototype = RoomPosition
-
-_HasPosition = Union['RoomPosition', 'RoomObject']
-_FindParameter = Union[int, List[_HasPosition]]
 
 
 class _Owner:

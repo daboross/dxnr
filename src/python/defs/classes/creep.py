@@ -86,7 +86,7 @@ class Creep(RoomObject):
     def getActiveBodyparts(self, _type: str) -> int:
         pass
 
-    def harvest(self, target: Union[Source, Mineral]):
+    def harvest(self, target: Union[Source, Mineral]) -> int:
         pass
 
     def heal(self, target: 'Creep') -> int:

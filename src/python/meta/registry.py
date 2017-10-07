@@ -8,8 +8,8 @@ if TYPE_CHECKING:
 
 
 class Database:
-    def __init__(self):
-        self.target_type_to_find_function = {}  # type: Dict[int, Callable[[Creep], Optional[str]]
+    def __init__(self) -> None:
+        self.target_type_to_find_function = {}  # type: Dict[int, Callable[[Creep], Optional[str]]]
         self.role_type_to_run_function = {}  # type: Dict[int, Callable[[Room, Creep], None]]
 
     def register(self, exports: Exports) -> 'Database':

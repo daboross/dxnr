@@ -2,5 +2,5 @@ from behaviors import upgrade
 from providers import registry
 
 
-def register():
+def register() -> None:
     registry.register(upgrade.exports)

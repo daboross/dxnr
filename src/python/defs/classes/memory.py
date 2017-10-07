@@ -43,21 +43,21 @@ class RawMemory:
         pass
 
     @classmethod
-    def set(cls, value: str):
+    def set(cls, value: str) -> None:
         pass
 
     @classmethod
-    def setActiveSegments(cls, ids: List[int]):
+    def setActiveSegments(cls, ids: List[int]) -> None:
         pass
 
     @classmethod
-    def setActiveForeignSegment(cls, username: Optional[str], _id: int = None):
+    def setActiveForeignSegment(cls, username: Optional[str], _id: Optional[int] = None) -> None:
         pass
 
     @classmethod
-    def setDefaultPublicSegment(cls, _id: Optional[int]):
+    def setDefaultPublicSegment(cls, _id: Optional[int]) -> None:
         pass
 
     @classmethod
-    def setPublicSegments(cls, ids: List[int]):
+    def setPublicSegments(cls, ids: List[int]) -> None:
         pass

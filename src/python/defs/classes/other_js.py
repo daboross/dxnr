@@ -11,23 +11,23 @@ class Object:
     """
 
     @classmethod
-    def assign(cls, target: Any, *sources: Any):
+    def assign(cls, target: Any, *sources: Any) -> None:
         pass
 
     @classmethod
-    def create(cls, proto: Any, propertiesObject: Any = None):
+    def create(cls, proto: Any, propertiesObject: Any = None) -> None:
         pass
 
     @classmethod
-    def defineProperties(cls, obj: Any, props: Dict[str, Any]):
+    def defineProperties(cls, obj: Any, props: Dict[str, Any]) -> None:
         pass
 
     @classmethod
-    def defineProperty(cls, obj: Any, prop: str, descriptor: Dict[str, Any]):
+    def defineProperty(cls, obj: Any, prop: str, descriptor: Dict[str, Any]) -> None:
         pass
 
     @classmethod
-    def freeze(cls, obj: Any):
+    def freeze(cls, obj: Any) -> None:
         pass
 
     @classmethod

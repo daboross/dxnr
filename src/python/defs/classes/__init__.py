@@ -3,7 +3,7 @@ from .game import Game, PathFinder
 # noinspection PyProtectedMember
 from .lodash import _
 # noinspection PyProtectedMember
-from .memory import Memory, RawMemory, _Memory
+from .memory import Memory, RawMemory, _Memory, _MemoryValue
 from .misc_obj import Flag, Mineral, Resource, RoomObject, Source
 from .other_js import Array, Infinity, JSON, Math, Object, RegExp, String, console, module, require, this, typeof, \
     undefined
