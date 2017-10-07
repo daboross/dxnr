@@ -8,6 +8,7 @@ def warn(message: str, *parameters: Any) -> None:
 def repeated_registration(registration_type: str, type_id: int) -> None:
     warn("repeated {} registration for type {}", registration_type, type_id)
 
+
 def missing_registration(registration_type: str, type_id: int) -> None:
     warn("missing {} registration for type {}", registration_type, type_id)
 

@@ -1,4 +1,4 @@
-from typing import Any, ClassVar, Dict, List, Optional, Tuple, Union
+from typing import Any, ClassVar, Dict, List, Optional, Union
 
 from .memory import _Memory
 from .misc_obj import Mineral, Resource, RoomObject, Source

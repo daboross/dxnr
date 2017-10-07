@@ -14,5 +14,6 @@ def instantiate() -> None:
             int((Game.cpu.limit + Game.cpu.tickLimit) / 2)
         )
 
+
 def is_over_limit() -> bool:
     return Game.cpu.getUsed() > _limit
