@@ -1,5 +1,6 @@
 from typing import Callable, Dict, Optional, TYPE_CHECKING
 
+from constants import RoleId, TargetTypeId
 from defs import *
 from utilities import warnings
 
@@ -9,8 +10,8 @@ if TYPE_CHECKING:
 
 class Database:
     def __init__(self) -> None:
-        self.target_type_to_find_function = {}  # type: Dict[int, Callable[[Creep], Optional[str]]]
-        self.role_type_to_run_function = {}  # type: Dict[int, Callable[[Room, Creep], None]]
+        self.target_type_to_find_function = {}  # type: Dict[TargetTypeId, Callable[[Creep], Optional[str]]]
+        self.role_type_to_run_function = {}  # type: Dict[RoleId, Callable[[Room, Creep], None]]
 
     def register(self, exports: Exports) -> 'Database':
         target_functions_to_register = exports.get_exported_target_functions()

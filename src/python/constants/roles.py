@@ -1,1 +1,3 @@
-role_upgrader = 1
+from constants import RoleId
+
+role_upgrader = RoleId(1)

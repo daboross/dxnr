@@ -1,5 +1,6 @@
 from typing import Dict, List, Optional, Union, cast
 
+from constants import TargetTypeId
 from constants.memkeys import key_memory_targets
 from defs import *
 from providers import registry
@@ -73,7 +74,7 @@ def _unregister_target(creep_name: str, target_type: int, target_id: str) -> Non
         del this_target_type_creeps[target_id]
 
 
-def _find_target(creep: Creep, target_type: int) -> Optional[str]:
+def _find_target(creep: Creep, target_type: TargetTypeId) -> Optional[str]:
     find_functions = registry.get().target_type_to_find_function
     if target_type in find_functions:
         return find_functions[target_type](creep)
@@ -82,7 +83,7 @@ def _find_target(creep: Creep, target_type: int) -> Optional[str]:
         return None
 
 
-def get_number_of_targeters(target_type: int, target_id: str) -> int:
+def get_number_of_targeters(target_type: TargetTypeId, target_id: str) -> int:
     this_target_type_map = _target_to_creeps[target_type]
     if this_target_type_map:
         return _.size(this_target_type_map[target_id])
@@ -90,7 +91,7 @@ def get_number_of_targeters(target_type: int, target_id: str) -> int:
         return 0
 
 
-def get_target(creep: Union[Creep, str], target_type: int) -> Optional[RoomObject]:
+def get_target(creep: Union[Creep, str], target_type: TargetTypeId) -> Optional[RoomObject]:
     if isinstance(creep, Creep):
         creep_name = creep.name
     else:
@@ -110,7 +111,7 @@ def get_target(creep: Union[Creep, str], target_type: int) -> Optional[RoomObjec
         return None
 
 
-def get_or_find_target(creep: Creep, target_type: int) -> Optional[RoomObject]:
+def get_or_find_target(creep: Creep, target_type: TargetTypeId) -> Optional[RoomObject]:
     creep_name = creep.name
 
     existing_target = get_target(creep_name, target_type)
