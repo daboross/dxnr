@@ -264,7 +264,7 @@ class _LodashChain(Generic[_L1]):
     def toPlainObject(self) -> '_LodashChain':
         pass
 
-    def sum(self, iteratee: Union[str, Callable[[_L1], _L2], None] = lambda x: x, thisArg: Any = None) -> _L2:
+    def sum(self, iteratee: Union[str, Callable[[_L1], _L2], None] = None, thisArg: Any = None) -> _L2:
         pass
 
     def keys(self) -> '_LodashChain':
@@ -766,13 +766,13 @@ class _:
 
     @staticmethod
     def max(collection: Union[List[_L1], Dict[Any, _L1]],
-            iteratee: Union[str, Callable[[_L1], _L2], None] = lambda x: x,
+            iteratee: Union[str, Callable[[_L1], Any], None] = lambda x: x,
             thisArg: Any = None) -> _L1:
         pass
 
     @staticmethod
     def min(collection: Union[List[_L1], Dict[Any, _L1]],
-            iteratee: Union[str, Callable[[_L1], _L2], None] = lambda x: x,
+            iteratee: Union[str, Callable[[_L1], Any], None] = lambda x: x,
             thisArg: Any = None) -> _L1:
         pass
 
@@ -782,8 +782,8 @@ class _:
 
     @staticmethod
     def sum(collection: Union[List[_L1], Dict[Any, _L1]],
-            iteratee: Union[str, Callable[[_L1], _L2], None] = lambda x: x,
-            thisArg: Any = None) -> _L3:
+            iteratee: Union[str, Callable[[_L1], _L2], None] = None,
+            thisArg: Any = None) -> _L2:
         pass
 
     @staticmethod
