@@ -133,7 +133,7 @@ def load_config(base_dir: str) -> Configuration:
                         help="if true, use past built files for files who haven't changed")
     args = parser.parse_args()
 
-    config_file = os.path.join(base_dir, 'config.json')
+    config_file = os.path.join(base_dir, args.config_file)
 
     with open(os.path.join(base_dir, config_file)) as f:
         config_json = json.load(f)
