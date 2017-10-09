@@ -22,7 +22,7 @@ def instantiate() -> None:
     _creep_to_targets = _mem[_key_targets_creep_to_targets]
     if not _creep_to_targets:
         _creep_to_targets = _mem[_key_targets_creep_to_targets] = {}
-    _target_to_creeps = _mem[_key_targets_target_to_creeps] = {}
+    _target_to_creeps = _mem[_key_targets_target_to_creeps]
     if not _target_to_creeps:
         _target_to_creeps = _mem[_key_targets_target_to_creeps] = {}
 
