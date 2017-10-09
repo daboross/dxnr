@@ -1,6 +1,6 @@
-from typing import Callable, Dict, Optional, TYPE_CHECKING
+from typing import Callable, Dict, List, Optional, TYPE_CHECKING, Tuple
 
-from constants import RoleId, TargetTypeId
+from constants import RoleId, SpawnIdeaKey, SpawnPriorityId, TargetTypeId
 from defs import *
 from utilities import warnings
 
@@ -12,6 +12,7 @@ class Database:
     def __init__(self) -> None:
         self.target_type_to_find_function = {}  # type: Dict[TargetTypeId, Callable[[Creep], Optional[str]]]
         self.role_type_to_run_function = {}  # type: Dict[RoleId, Callable[[Room, Creep], None]]
+        self.ordered_spawn_possibilities = []  # type: List[Tuple[SpawnPriorityId, Callable[[Room], Optional[Dict[SpawnIdeaKey, int]]]]]
 
     def register(self, exports: Exports) -> 'Database':
         target_functions_to_register = exports.get_exported_target_functions()
@@ -24,4 +25,12 @@ class Database:
             if role_type in self.role_type_to_run_function:
                 warnings.repeated_registration("role", role_type)
             self.role_type_to_run_function[role_type] = role_functions_to_register[role_type]
+        for spawn_tuple in exports.get_exported_spawn_needs():
+            self.ordered_spawn_possibilities.append(spawn_tuple)
         return self
+
+    def finalize(self) -> None:
+        self.ordered_spawn_possibilities = _.sortBy(
+            _.shuffle(self.ordered_spawn_possibilities),
+            lambda t: t[0]
+        )

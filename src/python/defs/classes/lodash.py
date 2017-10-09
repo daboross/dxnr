@@ -904,3 +904,7 @@ class _:
     @staticmethod
     def valuesIn(_object: Union[Dict[str, _L2], Any]) -> List[_L2]:
         pass
+
+    @staticmethod
+    def random(minimum: int, maximum: int) -> int:
+        pass

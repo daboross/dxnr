@@ -1,10 +1,11 @@
 import behaviors
 import providers
 from defs import *
-from providers import roles, spawning
+from providers import registry, roles, spawning
 from utilities import errors
 
 behaviors.register()
+registry.get().finalize()
 
 
 @errors.catching(lambda: "running main")

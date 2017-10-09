@@ -1,11 +1,14 @@
-from typing import List, Optional, cast
+from typing import Dict, List, Optional, cast
 
+from constants import SpawnIdeaKey
 from constants.memkeys import key_creep_filling
 from constants.roles import role_upgrader
+from constants.spawning import body_type_upgrader, spawn_idea_key_body, spawn_idea_key_role, spawn_idea_key_size, \
+    spawn_priority_upgrader
 from constants.targets import target_source
 from defs import *
 from meta.registry_exports import Exports
-from providers import targets
+from providers import exp_memory, targets
 
 
 def run(room: Room, creep: Creep) -> None:
@@ -16,14 +19,16 @@ def run(room: Room, creep: Creep) -> None:
     if creep.carryCapacity <= 0 or not creep.getActiveBodyparts(WORK):
         return
 
-    if creep.memory[key_creep_filling]:
+    memory = exp_memory.creep_mem(creep.name)
+
+    if memory[key_creep_filling]:
         if _.sum(creep.carry) >= creep.carryCapacity:
-            creep.memory[key_creep_filling] = False
+            memory[key_creep_filling] = False
     else:
         if _.sum(creep.carry) <= 0:
-            creep.memory[key_creep_filling] = True
+            memory[key_creep_filling] = True
 
-    if creep.memory[key_creep_filling]:
+    if memory[key_creep_filling]:
         source = cast(Source, targets.get_or_find_target(creep, target_source))
         if source:
             if creep.pos.isNearTo(source):
@@ -52,4 +57,18 @@ def find_source(creep: Creep) -> Optional[str]:
         return None
 
 
-exports = Exports().role(role_upgrader, run).target(target_source, find_source)
+def spawn_need(room: Room) -> Optional[Dict[SpawnIdeaKey, int]]:
+    # we always need upgrader creeps, of course!
+    return {
+        spawn_idea_key_role: role_upgrader,
+        spawn_idea_key_body: body_type_upgrader,
+        spawn_idea_key_size: 1,
+    }
+
+
+exports = (
+    Exports()
+        .role(role_upgrader, run)
+        .target(target_source, find_source)
+        .spawning_need(spawn_priority_upgrader, spawn_need)
+)
