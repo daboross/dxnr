@@ -11,7 +11,6 @@ def instantiate() -> None:
     _memory = Memory
 
 
-
 def top_level_mem_ro(_id: TopLevelMemoryId) -> Dict[str, Dict[SecondLevelMemoryKey, Any]]:
     if _id in _memory:
         return _memory[_id]

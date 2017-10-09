@@ -55,4 +55,4 @@ def run_spawn(spawn: StructureSpawn) -> None:
 def _do_spawn(spawn: StructureSpawn, body: List[str], role: RoleId) -> None:
     name = names.create_name_excluding_existing()
     exp_memory.creep_mem(name)[key_creep_role] = role
-    spawn.createCreep(body, name) # TODO: check result
+    spawn.createCreep(body, name)  # TODO: check result

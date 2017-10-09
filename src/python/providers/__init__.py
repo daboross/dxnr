@@ -1,4 +1,4 @@
-from providers import cpucheck, targets, exp_memory
+from providers import cpucheck, exp_memory, targets
 
 
 def instantiate() -> None:

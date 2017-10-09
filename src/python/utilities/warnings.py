@@ -15,3 +15,7 @@ def missing_registration(registration_type: str, type_id: int) -> None:
 
 def unregistering_unregistered_creep(creep_name: str, target_type: int) -> None:
     warn("unregistering creep {} for {} which it is not registered for", creep_name, target_type)
+
+
+def unknown_type(type_of_type: str, type_id: int) -> None:
+    warn("unknown {} type id {}", type_of_type, type_id)

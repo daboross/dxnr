@@ -10,3 +10,5 @@ SpawnIdeaKey = NewType("SpawnIdeaKey", str)
 
 TopLevelMemoryId = NewType("TopLevelMemoryId", str)
 SecondLevelMemoryKey = NewType("SecondLevelMemoryKey", str)
+
+TaskId = NewType("TaskId", int)

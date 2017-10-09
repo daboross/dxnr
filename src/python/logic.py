@@ -1,11 +1,13 @@
 import behaviors
 import providers
+import tasks
 from defs import *
 from providers import registry, roles, spawning
 from utilities import errors
 
 behaviors.register()
-registry.get().finalize()
+tasks.register()
+registry.finalize()
 
 
 @errors.catching(lambda: "running main")
@@ -27,6 +29,12 @@ def main() -> None:
     for name in Object.keys(Game.spawns):
         spawn = Game.spawns[name]
         spawning.run_spawn(spawn)
+
+    for task_id, schedule, callback in registry.get().empire_tasks:
+        if schedule.matches(task_id):
+            errors.execute_catching(callback, lambda: "task {}".format(task_id))
+    pass
+    # TODO: room tasks here
 
 
 module.exports.loop = main

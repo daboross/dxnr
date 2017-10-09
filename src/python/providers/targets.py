@@ -91,6 +91,25 @@ def get_number_of_targeters(target_type: TargetTypeId, target_id: str) -> int:
         return 0
 
 
+def unregister_all(creep: Union[Creep, str]) -> None:
+    if isinstance(creep, Creep):
+        creep_name = creep.name
+    else:
+        creep_name = cast(str, creep)
+
+    creep_targets = _creep_to_targets[creep_name]
+    if not creep_targets:
+        return None
+
+    for target_type in Object.keys(creep_targets):
+        target_id = creep_targets[target_type]
+        _unregister_target(creep_name, target_type, target_id)
+
+
+def all_registered_creeps() -> List[str]:
+    return Object.keys(_creep_to_targets)
+
+
 def get_target(creep: Union[Creep, str], target_type: TargetTypeId) -> Optional[RoomObject]:
     if isinstance(creep, Creep):
         creep_name = creep.name

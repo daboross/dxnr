@@ -1,7 +1,9 @@
 from typing import Callable, Dict, List, Optional, TYPE_CHECKING, Tuple
 
-from constants import RoleId, SpawnIdeaKey, SpawnPriorityId, TargetTypeId
+from constants import RoleId, SpawnIdeaKey, SpawnPriorityId, TargetTypeId, TaskId
+from constants.tasks import empire_task, room_task
 from defs import *
+from meta.tasks import Schedule
 from utilities import warnings
 
 if TYPE_CHECKING:
@@ -13,6 +15,8 @@ class Database:
         self.target_type_to_find_function = {}  # type: Dict[TargetTypeId, Callable[[Creep], Optional[str]]]
         self.role_type_to_run_function = {}  # type: Dict[RoleId, Callable[[Room, Creep], None]]
         self.ordered_spawn_possibilities = []  # type: List[Tuple[SpawnPriorityId, Callable[[Room], Optional[Dict[SpawnIdeaKey, int]]]]]
+        self.empire_tasks = []  # type: List[Tuple[TaskId, Schedule, Callable[..., None]]]
+        self.room_tasks = []  # type: List[Tuple[TaskId, Schedule, Callable[..., None]]]
 
     def register(self, exports: Exports) -> 'Database':
         target_functions_to_register = exports.get_exported_target_functions()
@@ -27,6 +31,13 @@ class Database:
             self.role_type_to_run_function[role_type] = role_functions_to_register[role_type]
         for spawn_tuple in exports.get_exported_spawn_needs():
             self.ordered_spawn_possibilities.append(spawn_tuple)
+        for task_type_id, task_id, schedule, callback in exports.get_exported_tasks():
+            if task_type_id is empire_task:
+                self.empire_tasks.append((task_id, schedule, callback))
+            elif task_type_id is room_task:
+                self.room_tasks.append((task_id, schedule, callback))
+            else:
+                warnings.unknown_type("task", task_type_id)
         return self
 
     def finalize(self) -> None:
