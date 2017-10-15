@@ -17,6 +17,10 @@ class Schedule:
     def every_ticks(ticks: int) -> 'Schedule':
         return EveryTicks(ticks)
 
+    @staticmethod
+    def always() -> 'Schedule':
+        return Always()
+
 
 class EveryTicks(Schedule):
     def __init__(self, ticks: int) -> None:
@@ -25,3 +29,11 @@ class EveryTicks(Schedule):
 
     def matches(self, task_id: TaskId) -> bool:
         return Game.time % self.repeat_every_ticks == (task_id % 50)
+
+
+class Always(Schedule):
+    def __init__(self) -> None:
+        Schedule.__init__(self)
+
+    def matches(self, task_id: TaskId) -> bool:
+        return True

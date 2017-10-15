@@ -9,6 +9,8 @@ behaviors.register()
 tasks.register()
 registry.finalize()
 
+providers.apply_prototypes()
+
 
 @errors.catching(lambda: "running main")
 def main() -> None:

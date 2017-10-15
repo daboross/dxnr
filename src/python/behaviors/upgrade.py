@@ -9,6 +9,7 @@ from constants.targets import target_source
 from defs import *
 from meta.registry_exports import Exports
 from providers import exp_memory, targets
+from providers.movement import standard_move
 
 
 def run(room: Room, creep: Creep) -> None:
@@ -35,13 +36,13 @@ def run(room: Room, creep: Creep) -> None:
             if creep.pos.isNearTo(source):
                 creep.harvest(source)
             else:
-                creep.moveTo(source)
+                standard_move.move_to(creep, source.pos)
     else:
         controller = room.controller
         if creep.pos.inRangeTo(controller, 3):
             creep.upgradeController(controller)
         if not creep.pos.isNearTo(controller):
-            creep.moveTo(controller)
+            standard_move.move_to(creep, controller.pos)
 
 
 def find_source(creep: Creep) -> Optional[str]:
