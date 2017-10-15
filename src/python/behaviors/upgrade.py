@@ -24,6 +24,7 @@ def run(room: Room, creep: Creep) -> None:
     if memory[key_creep_filling]:
         if _.sum(creep.carry) >= creep.carryCapacity:
             memory[key_creep_filling] = False
+            targets.unregister_target(creep, target_source)
     else:
         if _.sum(creep.carry) <= 0:
             memory[key_creep_filling] = True

@@ -13,8 +13,8 @@ def missing_registration(registration_type: str, type_id: int) -> None:
     warn("missing {} registration for type {}", registration_type, type_id)
 
 
-def unregistering_unregistered_creep(creep_name: str, target_type: int) -> None:
-    warn("unregistering creep {} for {} which it is not registered for", creep_name, target_type)
+def unregistering_unregistered_creep(creep_name: str, target_type: int, details: str) -> None:
+    warn("unregistering creep {} for {} which it is not registered for ({})", creep_name, target_type, details)
 
 
 def unknown_type(type_of_type: str, type_id: int) -> None:

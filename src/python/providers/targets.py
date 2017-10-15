@@ -58,7 +58,8 @@ def _register_target(creep_name: str, target_type: int, target_id: str) -> None:
 def _unregister_target(creep_name: str, target_type: int, target_id: str) -> None:
     this_creep_targets = _creep_to_targets[creep_name]
     if not this_creep_targets or target_type not in this_creep_targets:
-        warnings.unregistering_unregistered_creep(creep_name, target_type)
+        warnings.unregistering_unregistered_creep(creep_name, target_type,
+                                                  "stage 1, _creep_to_targets[creep_name] does not exist.")
         return
 
     del this_creep_targets[target_type]
@@ -66,8 +67,11 @@ def _unregister_target(creep_name: str, target_type: int, target_id: str) -> Non
         del _creep_to_targets[creep_name]
 
     this_target_type_creeps = _target_to_creeps[target_type]
-    if not this_target_type_creeps or target_type not in this_target_type_creeps:
-        warnings.unregistering_unregistered_creep(creep_name, target_type)
+    if not this_target_type_creeps or target_id not in this_target_type_creeps:
+        warnings.unregistering_unregistered_creep(creep_name, target_type,
+                                                  "stage 2, _target_to_creeps[(target_id = {})] does not exist"
+                                                  .format(target_id))
+        return
 
     this_target_type_creeps[target_id].remove(creep_name)
     if _.isEmpty(this_target_type_creeps[target_id]):
@@ -106,6 +110,20 @@ def unregister_all(creep: Union[Creep, str]) -> None:
         _unregister_target(creep_name, target_type, target_id)
 
 
+def unregister_target(creep: Union[Creep, str], target_type: TargetTypeId) -> None:
+    if isinstance(creep, Creep):
+        creep_name = creep.name
+    else:
+        creep_name = cast(str, creep)
+
+    creep_targets = _creep_to_targets[creep_name]
+    if not creep_targets or target_type not in creep_targets:
+        return None
+
+    target_id = creep_targets[target_type]
+    _unregister_target(creep_name, target_type, target_id)
+
+
 def all_registered_creeps() -> List[str]:
     return Object.keys(_creep_to_targets)
 
@@ -117,7 +135,7 @@ def get_target(creep: Union[Creep, str], target_type: TargetTypeId) -> Optional[
         creep_name = cast(str, creep)
 
     creep_targets = _creep_to_targets[creep_name]
-    if not creep_targets:
+    if not creep_targets or target_type not in creep_targets:
         return None
 
     target_id = creep_targets[target_type]
