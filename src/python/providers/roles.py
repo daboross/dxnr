@@ -16,9 +16,12 @@ def get_role_func(creep: Creep) -> Optional[Callable[[Room, Creep], None]]:
     return None
 
 
-@errors.catching(lambda room, creep:
-                 "running creep {} (role: {}, room: {})"
-                 .format(creep, exp_memory.creep_mem_ro(creep)[key_creep_role], room))
+def _run_creep_desc(room: Room, creep: Creep) -> str:
+    return ("running creep {} (role: {}, room: {})"
+            .format(creep, exp_memory.creep_mem_ro(creep.name)[key_creep_role], room))
+
+
+@errors.catching(_run_creep_desc)
 def run_creep(room: Room, creep: Creep) -> None:
     run_func = get_role_func(creep)
     if run_func:
