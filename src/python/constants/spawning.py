@@ -1,6 +1,7 @@
 from constants import BodyTypeId, SpawnIdeaKey, SpawnPriorityId
 
-spawn_priority_upgrader = SpawnPriorityId(1)
+spawn_priority_spawn_fill = SpawnPriorityId(1)
+spawn_priority_upgrader = SpawnPriorityId(2)
 
 body_type_upgrader = BodyTypeId(1)
 
