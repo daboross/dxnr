@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, Iterable, List, Optional, TypeVar, Union
+from typing import Any, Callable, Dict, Generic, Iterable, Iterator, List, Optional, Tuple, TypeVar, Union
 
 _K = TypeVar('_K')
 _V = TypeVar('_V')
@@ -154,6 +154,63 @@ class console:
         pass
 
 
+K = TypeVar("K")
+V = TypeVar("V")
+
+
+class Map(Generic[K, V]):
+    def __init__(self, iterable: Optional[List[Tuple[K, V]]] = None) -> None:
+        pass
+
+    @property
+    def size(self) -> int:
+        return 0
+
+    def clear(self) -> None:
+        pass
+
+    def delete(self, key: K) -> None:
+        pass
+
+    def entries(self) -> Iterator[Tuple[K, V]]:
+        pass
+
+    def forEach(self, callback: Callable[[V, K, 'Map[K, V]'], None]) -> None:
+        pass
+
+    def get(self, key: K) -> Optional[V]:
+        pass
+
+    def has(self, key: K) -> bool:
+        pass
+
+    def keys(self) -> Iterator[K]:
+        pass
+
+    def set(self, key: K, value: V) -> 'Map[K, V]':
+        pass
+
+    def values(self) -> Iterator[V]:
+        pass
+
+
 Infinity = float('inf')
 
 undefined = None  # type: None
+
+__all__ = [
+    "Object",
+    "Math",
+    "String",
+    "typeof",
+    "require",
+    "JSON",
+    "this",
+    "module",
+    "RegExp",
+    "Array",
+    "console",
+    "Map",
+    "Infinity",
+    "undefined",
+]

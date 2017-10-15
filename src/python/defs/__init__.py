@@ -355,9 +355,8 @@ __all__ = [
 
     # classes
     'Creep', 'Game', 'PathFinder', '_', 'Memory', 'RawMemory', '_Memory', '_MemoryValue', 'Flag', 'Mineral', 'Resource',
-    'RoomObject',
-    'Source', 'Infinity', 'JSON', 'Math', 'Object', 'RegExp', 'module', 'require', 'this', 'typeof', 'undefined',
-    'Room', 'RoomPosition', '_PathPos', 'String', 'Array', 'console',
+    'RoomObject', 'Source', 'Infinity', 'JSON', 'Map', 'Math', 'Object', 'RegExp', 'module', 'require', 'this',
+    'typeof', 'undefined', 'Room', 'RoomPosition', '_PathPos', 'String', 'Array', 'console',
     'ConstructionSite', 'OwnedStructure', 'Structure', 'StructureContainer', 'StructureController',
     'StructureExtension', 'StructureExtractor', 'StructureKeeperLair', 'StructureLab', 'StructureLink',
     'StructureNuker', 'StructureObserver', 'StructurePortal', 'StructurePowerBank', 'StructurePowerSpawn',

@@ -1,9 +1,7 @@
-from typing import Any, TypeVar, Union
-
-T = TypeVar('T')
+from typing import Any, Union
 
 
-def __new__(arg: T) -> T:
+def __new__(arg: Any) -> Any:
     return arg
 
 
