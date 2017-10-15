@@ -3,7 +3,7 @@ import providers
 import tasks
 from defs import *
 from providers import registry, roles, spawning
-from utilities import errors
+from utilities import errors, warnings
 
 behaviors.register()
 tasks.register()
@@ -25,7 +25,12 @@ def main() -> None:
         if creep.room.controller and creep.room.controller.my:
             room = creep.room
         else:
-            room = _.find(Game.structures).room
+            a_structure_we_own = _.find(Game.structures)
+            if a_structure_we_own:
+                room = a_structure_we_own.room
+            else:
+                warnings.warn("no owned structures present in world")
+                room = creep.room
         roles.run_creep(room, creep)
 
     for name in Object.keys(Game.spawns):
