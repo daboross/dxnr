@@ -20,6 +20,17 @@ def main() -> None:
 
     providers.instantiate()
 
+
+    def task_error() -> str:
+        return ""
+
+    """
+    ideal code:
+
+    for task_id, schedule, callback in registry.get().root_tasks:
+        subtasks = errors.execute_catching(callback, lambda: "executing task {}".format(task_id))
+    """
+
     for name in Object.keys(Game.creeps):
         creep = Game.creeps[name]
         if creep.room.controller and creep.room.controller.my:
