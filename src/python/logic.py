@@ -1,12 +1,13 @@
-import behaviors
 import providers
 import tasks
+import trename_processes
+from core.kernel import Kernel
 from defs import *
-from providers import registry, roles, spawning
-from utilities import errors, warnings
+from providers import registry
+from utilities import errors
 
-behaviors.register()
-tasks.register()
+registry.register(tasks.exports)
+registry.register(trename_processes.exports)
 registry.finalize()
 
 providers.apply_prototypes()
@@ -20,39 +21,9 @@ def main() -> None:
 
     providers.instantiate()
 
+    kernel = Kernel()
 
-    def task_error() -> str:
-        return ""
-
-    """
-    ideal code:
-
-    for task_id, schedule, callback in registry.get().root_tasks:
-        subtasks = errors.execute_catching(callback, lambda: "executing task {}".format(task_id))
-    """
-
-    for name in Object.keys(Game.creeps):
-        creep = Game.creeps[name]
-        if creep.room.controller and creep.room.controller.my:
-            room = creep.room
-        else:
-            a_structure_we_own = _.find(Game.structures)
-            if a_structure_we_own:
-                room = a_structure_we_own.room
-            else:
-                warnings.warn("no owned structures present in world")
-                room = creep.room
-        roles.run_creep(room, creep)
-
-    for name in Object.keys(Game.spawns):
-        spawn = Game.spawns[name]
-        spawning.run_spawn(spawn)
-
-    for task_id, schedule, callback in registry.get().empire_tasks:
-        if schedule.matches(task_id):
-            errors.execute_catching(callback, lambda: "task {}".format(task_id))
-    pass
-    # TODO: room tasks here
+    kernel.run()
 
 
 module.exports.loop = main

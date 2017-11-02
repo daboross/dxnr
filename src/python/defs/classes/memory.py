@@ -4,14 +4,7 @@ __all__ = ['Memory', 'RawMemory', '_Memory', '_MemoryValue']
 
 _MemoryValue = Any
 
-
-class _Memory(dict):
-    def __getattr__(self, key: str) -> _MemoryValue:
-        pass
-
-    def __setattr__(self, key: str, value: _MemoryValue) -> None:
-        pass
-
+_Memory = Dict[Any, _MemoryValue]
 
 Memory = _Memory()
 

@@ -1,5 +1,6 @@
 from typing import Any
 
+from constants import ProcessTypeId
 from defs import *
 
 
@@ -21,6 +22,10 @@ def unregistering_unregistered_creep(creep_name: str, target_type: int, details:
 
 def unknown_type(type_of_type: str, type_id: int) -> None:
     warn("unknown {} type id {}", type_of_type, type_id)
+
+
+def process_failure_exiting(ptid: ProcessTypeId, reason: str, *args: Any) -> None:
+    warn("process (ptid: {}) exiting: {}", ptid, reason.format(*args))
 
 
 _error_codes = {

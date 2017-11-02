@@ -1,7 +1,4 @@
 from behaviors import spawn_fill, upgrade
-from providers import registry
+from meta.registry_exports import Exports
 
-
-def register() -> None:
-    registry.register(upgrade.exports)
-    registry.register(spawn_fill.exports)
+exports = Exports().merge(upgrade.exports).merge(spawn_fill.exports)

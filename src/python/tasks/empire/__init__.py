@@ -1,7 +1,4 @@
-from providers import registry
-from tasks.empire import creep_memory_clean, visualize_passing_movement
+from meta.registry_exports import Exports
+from tasks.empire import visualize_passing_movement
 
-
-def register() -> None:
-    registry.register(visualize_passing_movement.exports)
-    registry.register(creep_memory_clean.exports)
+exports = Exports().merge(visualize_passing_movement.exports)

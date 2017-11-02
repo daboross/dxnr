@@ -1,5 +1,4 @@
+from meta.registry_exports import Exports
 from tasks import empire
 
-
-def register() -> None:
-    empire.register()
+exports = Exports().merge(empire.exports)

@@ -1,12 +1,11 @@
-from constants.memkeys import key_memory_creeps
+from typing import Any, Dict
+
 from defs import *
-from providers import exp_memory
 
 
-def create_name_excluding_existing() -> str:
+def create_name_excluding_keys_to(existing: Dict[Any, Any]) -> str:
     name = _random_name()
-    all_creeps = exp_memory.top_level_mem_ro(key_memory_creeps)
-    while name in all_creeps:
+    while name in existing:
         name += _random_name()
     return name
 

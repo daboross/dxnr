@@ -1,2 +1,2 @@
-git+git://github.com/daboross/Transcrypt.git@4991d3669328e996d0479c5405394fb69d23818e#egg=transcrypt
+git+git://github.com/daboross/Transcrypt.git@screeps-transcrypt-snapshot-1#egg=transcrypt
 git+git://github.com/python/mypy.git#egg=mypy
