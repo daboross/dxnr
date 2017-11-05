@@ -387,7 +387,7 @@ class _:
         pass
 
     @staticmethod
-    def pullAt(array: List[_L1], *indices: int) -> List[_L1]:
+    def pullAt(array: List[_L1], indices: List[int]) -> List[_L1]:
         pass
 
     @staticmethod
@@ -563,7 +563,7 @@ class _:
     @staticmethod
     def map(collection: Union[List[_L1], Dict[Any, _L1]],
             iteratee: Union[str, Callable[[_L1], _L2], None] = None,
-            thisArg: Any = None) -> _L2:
+            thisArg: Any = None) -> List[_L2]:
         pass
 
     @staticmethod

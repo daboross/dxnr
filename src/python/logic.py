@@ -1,14 +1,12 @@
 import providers
-import tasks
 import trename_processes
 from core.kernel import Kernel
 from defs import *
 from providers import registry
 from utilities import errors
 
-registry.register(tasks.exports)
+#registry.register(tasks.exports)
 registry.register(trename_processes.exports)
-registry.finalize()
 
 providers.apply_prototypes()
 
@@ -22,6 +20,8 @@ def main() -> None:
     providers.instantiate()
 
     kernel = Kernel()
+
+    kernel.instantiate_processes()
 
     kernel.run()
 

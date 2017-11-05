@@ -394,6 +394,9 @@ class StructureSpawn(OwnedStructure):
             -> Union[int, str]:
         pass
 
+    def spawnCreep(self, body: List[str], name: str, opts: Optional[Dict[str, Any]] = None) -> int:
+        pass
+
     def recycleCreep(self, target: Creep) -> int:
         pass
 

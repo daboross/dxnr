@@ -1,11 +1,8 @@
-from typing import Callable, Dict, List, Optional, TYPE_CHECKING, Tuple
+from typing import Callable, Dict, Optional, TYPE_CHECKING, Type
 
-from constants import MessageTypeId, ProcessTypeId, TargetTypeId, \
-    TaskId
-from constants.tasks import empire_task, room_task
-from core.process_type import ProcessType
+from constants import ProcessTypeId, TargetTypeId
 from defs import *
-from meta.tasks import Schedule
+from meta.process_base import Process
 from utilities import warnings
 
 if TYPE_CHECKING:
@@ -15,11 +12,14 @@ if TYPE_CHECKING:
 class Database:
     def __init__(self) -> None:
         self.target_type_to_find_function = {}  # type: Dict[TargetTypeId, Callable[[Creep], Optional[str]]]
-        self.process_types = {}  # type: Dict[ProcessTypeId, ProcessType]
+        self.process_types = {}  # type: Dict[ProcessTypeId, Type[Process]]
 
     def register(self, exports: Exports) -> 'Database':
         for process in exports.get_exported_processes():
-            ptid = process.process_type_id
+            ptid = process.ptid
+            if ptid is None:
+                raise ValueError("process class {} has undefined ptid."
+                                 .format(process))
             if ptid in self.process_types:
                 warnings.repeated_registration('process', ptid)
             self.process_types[ptid] = process

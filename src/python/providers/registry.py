@@ -10,7 +10,3 @@ def get() -> Database:
 
 def register(exports: Exports) -> None:
     _registry.register(exports)
-
-
-def finalize() -> None:
-    _registry.finalize()

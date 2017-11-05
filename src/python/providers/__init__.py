@@ -1,4 +1,4 @@
-from providers import cpucheck, exp_memory, movement, targets
+from providers import cpucheck, exp_memory, movement, ordered_structures, targets
 
 
 def apply_prototypes() -> None:
@@ -10,3 +10,4 @@ def instantiate() -> None:
     cpucheck.instantiate()  # depends on exp_memory
     targets.instantiate()  # depends on exp_memory
     movement.instantiate()
+    ordered_structures.instantiate()

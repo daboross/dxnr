@@ -1,6 +1,6 @@
 from typing import NewType
 
-from constants import TaskId
+from constants import ProcessId
 from defs import *
 
 TaskTypeId = NewType("TaskTypeId", int)
@@ -10,7 +10,7 @@ class Schedule:
     def __init__(self) -> None:
         pass
 
-    def matches(self, task_id: TaskId) -> bool:
+    def matches(self, task_id: ProcessId) -> bool:
         pass
 
     @staticmethod
@@ -27,13 +27,13 @@ class EveryTicks(Schedule):
         Schedule.__init__(self)
         self.repeat_every_ticks = ticks
 
-    def matches(self, task_id: TaskId) -> bool:
-        return Game.time % self.repeat_every_ticks == (task_id % 50)
+    def matches(self, task_id: ProcessId) -> bool:
+        return Game.time % self.repeat_every_ticks == 0
 
 
 class Always(Schedule):
     def __init__(self) -> None:
         Schedule.__init__(self)
 
-    def matches(self, task_id: TaskId) -> bool:
+    def matches(self, task_id: ProcessId) -> bool:
         return True

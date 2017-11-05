@@ -1,16 +1,15 @@
-from typing import Callable, Dict, List, Optional, Tuple
+from typing import Callable, Dict, List, Optional, Type
 
-from constants import TargetTypeId, TaskId
-from core.process_type import ProcessType
+from constants import TargetTypeId
 from defs import *
-from meta.tasks import Schedule, TaskTypeId
+from meta.process_base import Process
 from utilities import warnings
 
 
 class Exports:
     def __init__(self) -> None:
         self._target_type_to_find_function = {}  # type: Dict[TargetTypeId, Callable[[Creep], Optional[str]]]
-        self._process_types = []  # type: List[ProcessType]
+        self._process_types = []  # type: List[Type[Process]]
 
     def target(self, target_type: TargetTypeId, callback: Callable[[Creep], str]) -> 'Exports':
         if target_type in self._target_type_to_find_function:
@@ -18,14 +17,14 @@ class Exports:
         self._target_type_to_find_function[target_type] = callback
         return self
 
-    def process(self, process: ProcessType) -> 'Exports':
+    def process(self, process: Type[Process]) -> 'Exports':
         self._process_types.append(process)
         return self
 
     def get_exported_target_functions(self) -> Dict[TargetTypeId, Callable[[Creep], Optional[str]]]:
         return self._target_type_to_find_function
 
-    def get_exported_processes(self) -> List[ProcessType]:
+    def get_exported_processes(self) -> List[Type[Process]]:
         return self._process_types
 
     def merge(self, other: 'Exports') -> 'Exports':

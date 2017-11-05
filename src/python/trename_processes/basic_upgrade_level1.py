@@ -1,29 +1,36 @@
-from typing import Dict, List, Optional, cast
+from typing import List, Optional, cast
 
-from constants import InnerProcessMemKey, ProcessId, SpawnIdeaKey
 from constants.memkeys import key_creep_filling
-from constants.roles import role_upgrader
-from constants.spawning import body_type_upgrader, spawn_idea_key_body, spawn_idea_key_role, spawn_idea_key_size, \
-    spawn_priority_upgrader
+from constants.processes import ptid_upgrading_level1
 from constants.targets import target_source
-from core.kernel import Kernel
 from defs import *
+from meta.process_base import CreepSpawnInfo, HasCreeps, HasHome
 from meta.registry_exports import Exports
-from providers import exp_memory, targets
+from providers import targets
 from providers.movement import standard_move
+from utilities.infos import Log
 
-key_room = InnerProcessMemKey("r")
-key_creeps = InnerProcessMemKey("c")
+log = Log("process: upgrade1")
 
 
-def run(pid: ProcessId, kernel: Kernel) -> None:
-    mem = kernel.process_memory(pid)
-    room = Game.rooms[mem[key_room]]
+class BasicUpgradeLvl1(HasHome, HasCreeps):
+    ptid = ptid_upgrading_level1
 
-    creeps = kernel.process_memory(pid)[key_creeps]
+    def run(self) -> None:
+        creeps = self.creeps()
+        room = self.room()
+        for creep in creeps:
+            run_creep(room, creep)
 
-    for name in creeps:
-        run_creep(room, Game.creeps[name])
+    def get_needed_creep(self) -> Optional[CreepSpawnInfo]:
+        creeps = self.creeps()
+        if len(creeps) < 8:
+            log.trace("get_needed_creep: returning that we do need a creep")
+            return CreepSpawnInfo(self.pid, [WORK, CARRY, MOVE, MOVE])
+        else:
+            log.trace("get_needed_creep: returning that we're a-ok")
+            return None
+
 
 def run_creep(room: Room, creep: Creep) -> None:
     # Basic upgrader class. TODO: smart room management
@@ -33,7 +40,7 @@ def run_creep(room: Room, creep: Creep) -> None:
     if creep.carryCapacity <= 0 or not creep.getActiveBodyparts(WORK):
         return
 
-    memory = exp_memory.creep_mem(creep.name)
+    memory = creep.memory
 
     if memory[key_creep_filling]:
         if _.sum(creep.carry) >= creep.carryCapacity:
@@ -72,18 +79,8 @@ def find_source(creep: Creep) -> Optional[str]:
         return None
 
 
-def spawn_need(room: Room) -> Optional[Dict[SpawnIdeaKey, int]]:
-    # we always need upgrader creeps, of course!
-    return {
-        spawn_idea_key_role: role_upgrader,
-        spawn_idea_key_body: body_type_upgrader,
-        spawn_idea_key_size: 1,
-    }
-
-
 exports = (
     Exports()
-        .role(role_upgrader, run)
+        .process(BasicUpgradeLvl1)
         .target(target_source, find_source)
-        .spawning_need(spawn_priority_upgrader, spawn_need)
 )

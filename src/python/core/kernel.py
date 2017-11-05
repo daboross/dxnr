@@ -1,72 +1,52 @@
-from typing import Any, Dict, List, cast
+from typing import Any, Dict, List, Optional, Tuple, Type, cast
 
-from constants import InnerProcessMemKey, MessageTypeId, ProcessId, ProcessTypeId, SecondLevelMemoryKey
+from constants import InnerProcessMemKey, ProcessId, ProcessTypeId, SecondLevelMemoryKey
 from constants.memkeys import key_memory_core, key_memory_process
 from constants.processes import ptid_bootup
-from core.process_type import ProcessType
 from defs import *
+from meta.process_base import Process
 from providers import exp_memory, registry
-from utilities import errors, infos, names, warnings
+from utilities import errors, names, warnings
+from utilities.infos import Log
 
 key_kernel_process_table = SecondLevelMemoryKey('p')
 key_kernel_child_table = SecondLevelMemoryKey('t')
 
-section = "kernel"
+__pragma__('skip')
+_ProcessTable = Dict[ProcessId, Tuple[ProcessTypeId, Optional[ProcessId], List[ProcessId]]]
+_InstanceTable = Dict[ProcessId, Process]
+__pragma__('noskip')
 
-_ProcessTable = Dict[ProcessId, ProcessTypeId]
-_ChildTable = Dict[ProcessId, Dict[ProcessTypeId, List[ProcessId]]]
-_ParentTable = Dict[ProcessId, ProcessId]
+log = Log("kernel")
+
 
 class Kernel:
     def __init__(self) -> None:
         self._known_processes = registry.get().process_types
         self._core_memory = exp_memory.top_level_mem(key_memory_core)
         self._process_table = self._core_memory[key_kernel_process_table]  # type: _ProcessTable
-        self._child_table = self._core_memory[key_kernel_child_table]  # type: _ChildTable
+        self._instantiated_processes = {}  # type: _InstanceTable
         if not self._process_table:
             self._process_table = {}  # type: _ProcessTable
             self._core_memory[key_kernel_process_table] = self._process_table
-        if not self._child_table:
-            self._child_table = {}  # type: _ChildTable
-            self._core_memory[key_kernel_child_table] = self._child_table
         self._process_memory = cast(Dict[ProcessId, Dict[InnerProcessMemKey, _MemoryValue]],
                                     exp_memory.top_level_mem(key_memory_process))
 
-    def _add_child(self, from_pid: ProcessId, ptid: ProcessTypeId, pid: ProcessId) -> None:
-        process_children = self._child_table[from_pid]
-        if not process_children:
-            self._child_table[from_pid] = process_children = {}
-        process_children_categorized = process_children[ptid]
-        if not process_children_categorized:
-            process_children_categorized = process_children[ptid] = []
+    def _add_child(self, from_pid: ProcessId, pid: ProcessId) -> None:
+        process_info = self._process_table[from_pid]
+        process_info[2].append(pid)
 
-        process_children_categorized.append(pid)
-
-    def _remove_child(self, from_pid: ProcessId, ptid: ProcessTypeId, pid: ProcessId) -> None:
-        process_children = self._child_table[from_pid]
+    def _remove_child(self, from_pid: ProcessId, pid: ProcessId) -> None:
+        process_info = self._process_table[from_pid]
+        process_children = process_info[2]
         if not process_children:
             raise ValueError("_remove_child(): {} has no children.".format(from_pid))
-        process_children_categorized = process_children[ptid]
-        if not process_children_categorized:
-            raise ValueError("_remove_child(): {} has no children of type {}.".format(from_pid, ptid))
+        process_children.remove(pid)
 
-        process_children_categorized.remove(pid)
-        if not len(process_children_categorized):
-            del process_children[ptid]
-        if not len(process_children):
-            del self._child_table[from_pid]
+    def _get_children(self, from_pid: ProcessId) -> List[ProcessId]:
+        return self._process_table[from_pid][2]
 
-    def _get_ro_children(self, from_pid: ProcessId, ptid: ProcessTypeId) -> List[ProcessId]:
-        process_children = self._child_table[from_pid]
-        if not process_children:
-            return []
-        process_children_categorized = process_children[ptid]
-        if process_children_categorized:
-            return process_children_categorized
-        else:
-            return []
-
-    def get_process_definition(self, ptid: ProcessTypeId) -> ProcessType:
+    def get_process_definition(self, ptid: ProcessTypeId) -> Type[Process]:
         process_type = self._known_processes[ptid]
         if not process_type:
             raise ValueError("get_process_definition(): invalid process type id: '{}'.".format(ptid))
@@ -79,78 +59,93 @@ class Kernel:
             self._process_memory[pid] = memory
         return memory
 
-    def spawn(self, from_pid: ProcessId, ptid: ProcessTypeId) -> ProcessId:
+    def spawn(self, from_pid: ProcessId, ptid: ProcessTypeId, *parameters: Any) -> ProcessId:
+        """
+        Spawns a new process!
+
+        :param from_pid: The parent of this process
+        :param ptid: The type of this process
+        :param parameters: Any additional parameters.
+        :return: The newly spawned process's process id.
+        """
+        log.trace("spawning child: (from_pid: {}, ptid: {}, *parameters: {})", from_pid, ptid, parameters)
         if not ptid:
             raise ValueError("spawn(): invalid process type: '{}'.".format(ptid))
         pid = ProcessId(names.create_name_excluding_keys_to(self._process_table))
-        self._process_table[pid] = ptid
+        self._process_table[pid] = (ptid, from_pid, [])
 
-        self._add_child(from_pid, ptid, pid)
+        if from_pid is not None:
+            self._add_child(from_pid, pid)
+
+        instance = self.get_process_definition(ptid)(pid, self)
+        self._instantiated_processes[pid] = instance
+        instance.init(*parameters)
 
         return pid
 
-    def get_or_spawn_child(self, from_pid: ProcessId, ptid: ProcessTypeId):
-        children = self._get_ro_children(from_pid, ptid)
-        if len(children):
-            return _.sample(children)
-        else:
-            return self.spawn(from_pid, ptid)
-
-
     def kill(self, pid: ProcessId) -> None:
-        process_type = self._process_table[pid]
-        if not process_type:
+        """
+        Removes the given process and all its children from the process tree.
+        """
+        log.trace("killing process: (pid: {})", pid)
+        process_info = self._process_table[pid]
+        if not process_info:
             raise ValueError("kill(): invalid process id: '{}'.".format(pid))
 
-        # TODO: kill hooks
+        for child_pid in process_info[2]:
+            self.kill(child_pid)
+
+        if pid in self._instantiated_processes:
+            self._instantiated_processes[pid].died()
+
+        del self._process_memory[pid]
 
         del self._process_table[pid]
 
-    def message(self, from_pid: ProcessId, message_type: MessageTypeId, target_pid: ProcessId, contents: Any) -> None:
-        target_ptid = self._process_table[target_pid]
-        target_process = self.get_process_definition(target_ptid)
+    def is_process_alive(self, pid: ProcessId) -> bool:
+        return pid in self._process_table
 
-        handler = target_process.message_handlers[message_type]
-        if not handler:
-            raise ValueError("message(): ptid not prepared to handle type {} messages: {}."
-                             .format(message_type, target_ptid))
+    def get_parent_of(self, pid: ProcessId) -> Optional[ProcessId]:
+        return self._process_table[pid][1]
 
-        handler(target_pid, self, from_pid, contents)
+    def get_children_of(self, pid: ProcessId) -> List[ProcessId]:
+        return self._get_children(pid)
 
-    # TODO:
-    # def message_any(self, from_pid: ProcessId, message_type: MessageTypeId, contents: Any) -> None:
-    #     all_handles = self._known_message_handler_types[message_type]
-    #     if not all_handles or not len(all_handles):
-    #         raise ValueError("message_any(): no handlers prepared to handle mtid: '{}'.".format(message_type))
-    #
-    #     self.message(from_pid, message_type, _.sample(all_handles), contents)
-    #
-    # def message_all(self, from_pid: ProcessId, message_type: MessageTypeId, contents: Any) -> None:
-    #     all_handles = self._known_message_handler_types[message_type]
-    #     if not all_handles or not len(all_handles):
-    #         return
-    #
-    #     for ptid in all_handles:
-    #         self.message(from_pid, message_type, ptid, contents)
+    def get_instance(self, pid: ProcessId) -> Optional[Process]:
+        return self._instantiated_processes[pid]
 
     def _run_process(self, pid: ProcessId) -> None:
-        ptid = self._process_table[pid]
+        instance = self._instantiated_processes[pid]
+        log.trace("running process: (pid: {}, instance: {})", pid, instance.__class__.__name__)
+        if not instance:
+            return
 
-        definition = self.get_process_definition(ptid)
-        if not definition:
-            warnings.warn("run_process(): invalid process type: '{}'. Killing '{}'.".format(ptid, pid))
-            self.kill(pid)
+        def run() -> None:
+            instance.run()
 
-        errors.execute_catching(definition.run,
-                                lambda: "error running process (type: '{}', id: '{}')".format(ptid, pid),
+        errors.execute_catching(run,
+                                lambda: "error running process (type: '{}', id: '{}')".format(instance.ptid, pid),
                                 pid, self)
+
+    def instantiate_processes(self) -> None:
+        for pid in Object.keys(self._process_table):
+            if pid not in self._process_table:
+                log.debug("skipping process instantiation: (pid: {}, reason: no longer alive)", pid)
+                continue
+            ptid = self._process_table[pid][0]
+
+            definition = self.get_process_definition(ptid)
+            if not definition:
+                warnings.warn("run_process(): invalid process type: '{}'. Killing '{}'.".format(ptid, pid))
+                self.kill(pid)
+            self._instantiated_processes[pid] = definition(pid, self)
 
     def run(self) -> None:
         pids_to_run = Object.keys(self._process_table)
 
         if not len(self._process_table):
-            infos.log(section, "no processes: starting bootup")
-            self.spawn(ptid_bootup)
+            log.info("no processes: starting bootup")
+            self.spawn(None, ptid_bootup)
 
         for pid in pids_to_run:
             self._run_process(pid)
