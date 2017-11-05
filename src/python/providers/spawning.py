@@ -1,8 +1,9 @@
 from typing import Dict, List, cast
 
+from constants.spawning import body_type_upgrader, spawn_idea_key_body, spawn_idea_key_role, spawn_idea_key_size
+
 from constants import BodyTypeId, RoleId
 from constants.memkeys import key_creep_role
-from constants.spawning import body_type_upgrader, spawn_idea_key_body, spawn_idea_key_role, spawn_idea_key_size
 from defs import *
 from providers import exp_memory, registry
 from utilities import errors, names

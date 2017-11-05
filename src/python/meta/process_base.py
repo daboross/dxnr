@@ -71,8 +71,7 @@ class HasCreeps(HasMemory, Process):
                 name = creeps[index]
                 creep = Game.creeps[name]
                 if creep:
-                    if not creep.spawning:
-                        result.append(creep)
+                    result.append(creep)
                 else:
                     # TODO: death notice?
                     if dead is None:

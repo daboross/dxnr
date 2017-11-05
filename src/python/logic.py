@@ -1,12 +1,12 @@
+import processes
 import providers
-import trename_processes
 from core.kernel import Kernel
 from defs import *
 from providers import registry
 from utilities import errors
 
 #registry.register(tasks.exports)
-registry.register(trename_processes.exports)
+registry.register(processes.exports)
 
 providers.apply_prototypes()
 

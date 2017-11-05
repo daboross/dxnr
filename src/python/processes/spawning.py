@@ -5,8 +5,8 @@ from constants.processes import ptid_spawning
 from defs import *
 from meta.process_base import CreepSpawnInfo, HasCreeps, HasHome, HasMemory, Process
 from meta.registry_exports import Exports
+from processes.economy import Econ
 from providers import ordered_structures
-from trename_processes.economy import Econ
 from utilities import names, warnings
 from utilities.infos import Log
 

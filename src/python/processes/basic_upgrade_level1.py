@@ -27,6 +27,8 @@ class BasicUpgradeLvl1(HasHome, HasCreeps):
         need_spawn_filling = len(creeps) < 8 and room.energyAvailable < room.energyCapacityAvailable
 
         for creep in creeps:
+            if creep.spawning:
+                continue
             if incapacitated(creep):
                 log.info("creep incapacitated: killing {}", creep)
                 creep.suicide()

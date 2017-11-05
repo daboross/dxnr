@@ -1,7 +1,7 @@
-from constants.tasks import empire_task, task_visualize_movement
+from constants.processes import ptid_visualize_movement
 from defs import *
+from meta.process_base import Process
 from meta.registry_exports import Exports
-from meta.tasks import Schedule
 from providers.movement import passing_movement
 from utilities import visuals, world
 
@@ -37,16 +37,19 @@ def draw_arrow(room_name: str,
     })
 
 
-def visualize_passing_movement() -> None:
-    data = passing_movement.get_current_movements_per_room()
-    for room_name in Object.keys(data):
-        room_data = data[room_name]
-        if room_data is None:
-            continue
-        for origin_xy, (destination_xy, move_reason) in list(room_data.entries()):
-            origin_x, origin_y = world.int_to_xy(origin_xy)
-            destination_x, destination_y = world.int_to_xy(destination_xy)
-            draw_arrow(room_name, origin_x, origin_y, destination_x, destination_y, COLOR_STRAW, 0.1)
+class VisualizeMovement(Process):
+    ptid = ptid_visualize_movement
+
+    def run(self) -> None:
+        data = passing_movement.get_current_movements_per_room()
+        for room_name in Object.keys(data):
+            room_data = data[room_name]
+            if room_data is None:
+                continue
+            for origin_xy, (destination_xy, move_reason) in list(room_data.entries()):
+                origin_x, origin_y = world.int_to_xy(origin_xy)
+                destination_x, destination_y = world.int_to_xy(destination_xy)
+                draw_arrow(room_name, origin_x, origin_y, destination_x, destination_y, COLOR_STRAW, 0.1)
 
 
-exports = Exports().task(empire_task, task_visualize_movement, Schedule.always(), visualize_passing_movement)
+exports = Exports().process(VisualizeMovement)
