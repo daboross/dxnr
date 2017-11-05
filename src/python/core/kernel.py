@@ -12,10 +12,8 @@ from utilities.infos import Log
 key_kernel_process_table = SecondLevelMemoryKey('p')
 key_kernel_child_table = SecondLevelMemoryKey('t')
 
-__pragma__('skip')
 _ProcessTable = Dict[ProcessId, Tuple[ProcessTypeId, Optional[ProcessId], List[ProcessId]]]
 _InstanceTable = Dict[ProcessId, Process]
-__pragma__('noskip')
 
 log = Log("kernel")
 
