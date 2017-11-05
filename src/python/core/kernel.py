@@ -112,6 +112,9 @@ class Kernel:
     def get_instance(self, pid: ProcessId) -> Optional[Process]:
         return self._instantiated_processes[pid]
 
+    def get_all_process_ids(self) -> List[ProcessId]:
+        return Object.keys(self._process_table)
+
     def _run_process(self, pid: ProcessId) -> None:
         instance = self._instantiated_processes[pid]
         log.trace("running process: (pid: {}, instance: {})", pid, instance.__class__.__name__)

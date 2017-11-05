@@ -1,4 +1,4 @@
-from providers import cpucheck, exp_memory, movement, ordered_structures, targets
+from providers import cpucheck, exp_memory, movement, ordered_structures, targets, global_kernel_handle
 
 
 def apply_prototypes() -> None:
@@ -11,3 +11,4 @@ def instantiate() -> None:
     targets.instantiate()  # depends on exp_memory
     movement.instantiate()
     ordered_structures.instantiate()
+    global_kernel_handle.instantiate()
