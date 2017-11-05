@@ -10,14 +10,29 @@ info = LogLevel(2)
 debug = LogLevel(1)
 trace = LogLevel(0)
 
-enabled_level = trace
+enabled_level = debug
 enabled_notify_level = error
+
+
+def describe_level(level: LogLevel) -> str:
+    if level == trace:
+        return "trace"
+    elif level == debug:
+        return "debug"
+    elif level == info:
+        return "info"
+    elif level == warning:
+        return "warning"
+    elif level == error:
+        return "error"
+    else:
+        return str(level)
 
 
 def log(level: LogLevel, section: str, message: str, *parameters: Any) -> None:
     if level < enabled_level:
         return
-    formatted = "[{}] {}".format(section, message.format(*parameters))
+    formatted = "[{}][{}] {}".format(describe_level(level), section, message.format(*parameters))
     print(formatted)
     if level >= enabled_notify_level:
         Game.notify(formatted)
